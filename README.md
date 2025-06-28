@@ -1,5 +1,9 @@
 # Chatbot
 
+## 🎬 Demo Video
+
+https://github.com/user-attachments/assets/f75f6b6f-cf68-417a-bbaf-2a48bcb583e4
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.2.
 
 ## Development server
