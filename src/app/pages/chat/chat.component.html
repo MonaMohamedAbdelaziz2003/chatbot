@@ -1,0 +1,120 @@
+<div class="chat-container">
+    <div class="chat-layout">
+        <div class="sidebar" [ngClass]="{'show-history': showChatHistory}">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" (click)="createNewChat()" [disabled]="isLoading">
+          {{ isLoading ? 'Creating...' : '+ New Inquiry' }}
+        </button>
+            </div>
+            <div class="chat-history">
+                <h3>Recent Inquiries</h3>
+                @if (errorMessage) {
+                <div class="error-alert animate-slide-in" role="alert" aria-live="assertive">
+                    <span class="error-icon">🖋️</span> {{ errorMessage }}
+                </div>}
+
+                <p *ngIf="chats.length === 0 && !isLoading" class="no-chats">No previous correspondence</p>
+                <p *ngIf="isLoading && chats.length === 0" class="loading">Loading inquiries...</p>
+
+                <div *ngIf="chats.length > 0">
+                    <div *ngFor="let chat of chats; trackBy: trackByChatId" class="chat-item" [ngClass]="{ 'active': selectedChat?.id === chat.id }" (click)="selectChat(chat)">
+                        <div class="chat-preview">
+                            <div class="chat-last-message">{{ chat.title || 'No messages yet' }}</div>
+                            <div class="chat-time">{{ formatTime(chat.created_at) }}</div>
+                        </div>
+                        <button class="delete-chat-btn" (click)="deleteChat(chat.id); $event.stopPropagation()" aria-label="Delete inquiry">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-main">
+            <div class="chat-header">
+                <button class="menu-toggle" (click)="toggleChatHistory()" aria-label="Toggle chat history">☰</button>
+                <div class="chat-info">
+                    <img [src]="selectedCharacter.image" [alt]="selectedCharacter.name" class="character-avatar-small">
+                    <div class="chat-details">
+                        <h3>{{ selectedCharacter.name }}</h3>
+                        @if (isTyping) {
+                        <span class="character-status typing">typing...</span> } @else if (selectedChat) {
+                        <span class="character-status online">online...</span> }
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Messages Area -->
+            <div class="messages-container" #messagesContainer>
+                @if (!selectedChat) {
+                <div class="empty-chat">
+                    <div class="empty-icon">📜</div>
+                    <h3>Begin Your Inquiry</h3>
+                    <p>Start a new inquiry to consult with {{ selectedCharacter?.name || 'the assistant' }}</p>
+                    <button class="new-chat-btn empty-chat-btn" (click)="createNewChat()" [disabled]="isLoading">
+        {{ isLoading ? 'Creating...' : 'Start New Inquiry' }}
+      </button>
+                </div>
+                } @else if (messages.length === 0 && !isLoading) {
+                <div class="empty-chat">
+                    <div class="empty-icon">📜</div>
+                    <h3>New Inquiry</h3>
+                    <p>Describe the case to consult with {{ selectedCharacter?.name }}</p>
+                </div>
+                } @else { @for (message of messages; track message.id) {
+                <div class="message" [ngClass]="{
+                    'user-message': message.role === 'user',
+                    'sherlock-message': message.role === 'assistant',
+                }">
+                    @if (message.role === 'assistant' ) {
+                    <img [src]="selectedCharacter.image" [alt]="selectedCharacter.name" class="message-avatar"> }
+
+                    <div class="message-content">
+                        <div class="message-bubble" [ngClass]="{ 'translating': isTranslating(message.id) }">
+
+                            <p>{{ message.content }}</p>
+                            @if (message.isTranslated) {
+                            <div class="translation-indicator">
+                                <span class="translation-badge">Translated</span>
+                            </div>
+                            }
+                        </div>
+
+                        <div class="message-meta">
+                            <span class="message-time">{{ formatTime(message.created_at) }}</span>
+
+                            <div class="message-actions">
+                                @if ( (message.role==='user' ||message.role==='assistant' ) && (isEnglishText(message.content) || message.originalContent)) { <button class="translate-btn" (click)="translateMessage(message)" [disabled]="isTranslating(message.id)"
+                                    [title]="getTranslationTooltip(message)" aria-label="Translate message">
+                                    <span class="translate-icon">{{ getTranslationIcon(message) }}</span>
+                                    </button> }
+
+                                <button class="delete-message-btn" (click)="deleteMessage(message.id)" aria-label="Delete message">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                } @if (isTyping) {
+                <div class="typing-indicator">
+                    <div class="typing-dots"><span></span><span></span><span></span></div>
+                    <span>{{ selectedCharacter?.name }} is contemplating...</span>
+                </div>
+                } }
+            </div>
+
+            @if (selectedChat) {
+            <div class="message-input-container">
+                <div class="message-input">
+                    <textarea [(ngModel)]="newMessage" placeholder="Describe the case..." (keypress)="onKeyPress($event)" rows="1" aria-label="Type your message">
+      </textarea>
+                    <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim() || isLoading" aria-label="Send message">
+        Dispatch
+      </button>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>

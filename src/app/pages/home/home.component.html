@@ -1,0 +1,115 @@
+<div class="home-container">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <h1>221B Baker Street</h1>
+        </div>
+
+        <div class="navbar-links">
+            @if (token) {
+            <div class="user-profile-nav" (clickOutside)="closeDropdown()">
+                <div class="profile-container" (click)="toggleDropdown()" tabindex="0">
+                    <img [src]="user?.image_url || img" alt="profile" [alt]="user?.name" class="profile-avatar">
+                    <span class="dropdown-arrow" [class.rotated]="isDropdownOpen">▼</span>
+                </div>
+
+                <div class="dropdown-menu" [class.show]="isDropdownOpen" (click)="$event.stopPropagation()">
+                    <div class="dropdown-header">
+                        <img [src]="user?.image_url || img" alt="profile" style="cursor: pointer;" (click)="openImageUpload()" class="dropdown-avatar">
+                        <div class="user-info">
+                            <h4>{{ user?.name }}</h4>
+                            <p>{{ user?.email }}</p>
+                        </div>
+                    </div>
+
+                    <hr class="dropdown-divider">
+                    <div class="dropdown-options">
+                        <a (click)="logout()" class="nav-link logout-btn">
+                            <span class="nav-icon">🚪</span> Depart 221B
+                        </a>
+                    </div>
+                </div>
+                <input type="file" #fileInput (change)="onImageSelected($event)" accept="image/*" style="display: none;">
+            </div>
+
+            }@else {
+            <a (click)="login()" class="nav-link ">
+                <span class="nav-icon">🔑</span> Enter 221B
+            </a>
+            }
+        </div>
+
+    </nav>
+    <div class="hero-section">
+        <div class="hero-content">
+            <h2 class="hero-title animate-fade-in">Unravel the Unthinkable</h2>
+            <p class="hero-subtitle animate-fade-in delay-1">
+                Consult Sherlock Holmes, the master of deduction, and solve the most perplexing crimes from the comfort of your armchair.
+            </p>
+            <a href="#char" class="hero-cta animate-fade-in delay-2 cursor-pointer">
+ 🕵️‍♂️ The Cast
+</a> </div>
+        <div class="hero-overlay"></div>
+
+
+    </div>
+    <main class="main-content">
+
+        <section class="sherlock-section" id="char">
+            <div class="sherlock-slider">
+                <div class="slider-container" [style.transform]="'translateX(' + (-currentSlide * 100) + '%)'">
+                    @for (character of characters; track character.id; let i = $index) {
+                    <div class="sherlock-card animate-slide-in">
+                        <img [src]="character.image" [alt]="character.name" class="sherlock-avatar">
+                        <div class="sherlock-details">
+                            <h3>{{ character?.name }}</h3>
+                            <p>{{ character?.description }}</p>
+                            <a class="chat-button" (click)="openChat(character.id)">💬 Chat with {{ character.name }}</a>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="slider-controls">
+                    <button class="nav-button" [disabled]="currentSlide === 0" (click)="previousSlide()">❮</button>
+
+                    <div class="slider-dots">
+                        @for (dot of dots; track $index; let i = $index) {
+                        <span class="dot" [class.active]="currentSlide === i" (click)="goToSlide(i)"></span> }
+                    </div>
+
+                    <!-- <span class="slide-counter">
+        {{ currentSlide + 1 }} / {{ totalSlides }}
+      </span> -->
+                    <button class="nav-button" [disabled]="currentSlide === totalSlides - 1" (click)="nextSlide()">❯</button>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section class="features-section">
+            <h3 class="section-title animate-fade-in">Why Consult Sherlock?</h3>
+            <div class="features-grid">
+                <div class="feature-card animate-slide-in delay-1">
+                    <span class="feature-icon">🔍</span>
+                    <h4>Deductive Brilliance</h4>
+                    <p>Every detail is scrutinized, every possibility explored.</p>
+                </div>
+                <div class="feature-card animate-slide-in delay-2">
+                    <span class="feature-icon">📜</span>
+                    <h4>Victorian Expertise</h4>
+                    <p>Immerse yourself in the era of gaslight and mystery.</p>
+                </div>
+                <div class="feature-card animate-slide-in delay-3">
+                    <span class="feature-icon">💡</span>
+                    <h4>Instant Insights</h4>
+                    <p>Swift responses to your most pressing inquiries.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>London, 1895 | Forged in the Fires of Curiosity</p>
+    </footer>
+</div>

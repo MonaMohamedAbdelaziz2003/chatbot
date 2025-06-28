@@ -1,0 +1,125 @@
+<div class="login-container" style="background: linear-gradient(135deg, rgba(255, 245, 220, 0.95) 0%, rgba(255, 235, 205, 0.98) 50%, rgba(245, 225, 195, 0.95) 100%);">
+    <div class="parchment-overlay animate-fade-in" style="    background: #ffffffd9;">
+        <div class="auth-card">
+            <div class="header">
+                <div class="logo-container">
+                    <div class="logo-circle">
+                        <span class="logo-text">221B</span>
+                    </div>
+                </div>
+                <h1 class="title">Scotland Yard Dispatch</h1>
+                <p class="subtitle">Consult Sherlock Holmes</p>
+            </div>
+
+            <div class="toggle-container">
+                <button type="button" class="toggle-btn" [class.active]="isLogin()" (click)="setIsLogin(true)">
+          Login
+        </button>
+                <button type="button" class="toggle-btn" [class.active]="!isLogin()" (click)="setIsLogin(false)">
+          Sign Up
+        </button>
+            </div>
+
+            <div class="form-content">
+                <!-- Login Form -->
+                @if (isLogin()) {
+                <form #loginForm="ngForm" class="form" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input type="email" class="input-field" placeholder="Email Address" name="email" [(ngModel)]="email" required email #emailInput="ngModel" />
+                        </div>
+                        @if (loginErrors.email || (emailInput.touched && emailInput.invalid)) {
+                        <div class="error">
+                            {{ loginErrors.email || 'Please enter a valid email address' }}
+                        </div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input [type]="showPassword() ? 'text' : 'password'" class="input-field" placeholder="Password" name="password" [(ngModel)]="password" required #passwordInput="ngModel" />
+                            <button type="button" class="password-toggle" (click)="togglePassword('login')">
+                  <span [class.eye]="!showPassword()" [class.eye-off]="showPassword()"></span>
+                </button>
+                        </div>
+                        @if (loginErrors.password || (passwordInput.touched && passwordInput.invalid)) {
+                        <div class="error">
+                            {{ loginErrors.password || 'Please enter a password' }}
+                        </div>
+                        }
+                    </div>
+
+
+                    <button type="submit" class="submit-btn" [disabled]="loginForm.invalid">
+              Enter 221B
+            </button>
+                </form>
+                }
+
+                <!-- Signup Form -->
+                @if (!isLogin()) {
+                <form #signupForm="ngForm" class="form" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input type="text" class="input-field" placeholder="Full Name" name="name" [(ngModel)]="name" required #nameInput="ngModel" />
+                        </div>
+                        @if (registerErrors.name || (nameInput.touched && nameInput.invalid)) {
+                        <div class="error">
+                            {{ registerErrors.name || 'Please enter your full name' }}
+                        </div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input type="email" class="input-field" placeholder="Email Address" name="email" [(ngModel)]="email" required email #emailInput="ngModel" />
+                        </div>
+                        @if (registerErrors.email || (emailInput.touched && emailInput.invalid)) {
+                        <div class="error">
+                            {{ registerErrors.email || 'Please enter a valid email address' }}
+                        </div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input [type]="showPassword() ? 'text' : 'password'" class="input-field" placeholder="Password" name="password" [(ngModel)]="password" required #passwordInput="ngModel" />
+                            <button type="button" class="password-toggle" (click)="togglePassword('signup')">
+                  <span [class.eye]="!showPassword()" [class.eye-off]="showPassword()"></span>
+                </button>
+                        </div>
+                        @if (registerErrors.password || (passwordInput.touched && passwordInput.invalid)) {
+                        <div class="error">
+                            {{ registerErrors.password || 'Please enter a password' }}
+                        </div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input type="password" class="input-field" placeholder="Confirm Password" name="confirmPassword" [(ngModel)]="confirmPassword" required #confirmPasswordInput="ngModel" />
+                            <button type="button" class="password-toggle" (click)="togglePassword('signup')">
+                  <span [class.eye]="!showPassword()" [class.eye-off]="showPassword()"></span>
+                </button>
+                        </div>
+                        @if (registerErrors.confirm_password || (confirmPasswordInput.touched && confirmPasswordInput.invalid)) {
+                        <div class="error">
+                            {{ registerErrors.confirm_password || 'Please confirm your password' }}
+                        </div>
+                        }
+                    </div>
+
+                    <button type="submit" class="submit-btn" [disabled]="signupForm.invalid">
+              Join Baker Street
+            </button>
+                </form>
+                }
+            </div>
+
+            <footer class="footer">
+                <p class="quote">"When you have eliminated the impossible, whatever remains, however improbable, must be the truth."</p>
+                <p class="author">- Sherlock Holmes</p>
+            </footer>
+        </div>
+    </div>
+</div>
