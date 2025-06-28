@@ -2,7 +2,7 @@
 
 ## 🎬 Demo Video
 
-https://github.com/user-attachments/assets/f75f6b6f-cf68-417a-bbaf-2a48bcb583e4
+https://github.com/user-attachments/assets/976d34d8-0ca0-47bf-972d-6f9176c5e971
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.2.
 
